@@ -46,18 +46,10 @@ namespace P3AddNewFunctionalityDotNetCore.Controllers
             // product property that is not conform to its business rules. The return type of the method 
             // must be of List<string>.
 
-            foreach (string error in modelErrors)
-            {
-                ModelState.AddModelError("", error);
-            }
-
-            if (ModelState.IsValid)
-            {
+            if (ModelState.IsValid) {
                 _productService.SaveProduct(product);
-                return RedirectToAction("Admin");
-            }
-            else
-            {
+                return RedirectToAction("Admin");}
+            else {
                 return View(product);
             }
         }
