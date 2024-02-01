@@ -1,4 +1,4 @@
-using XUnit;
+using Xunit;
 using P3AddNewFunctionalityDotNetCore.Models;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests {
@@ -8,20 +8,22 @@ namespace P3AddNewFunctionalityDotNetCore.Tests {
         /// Tests creation of product and whether correct errors are created for different issues.
         /// 
 
-        [Fact] 
-        public void CreateProduct1() {
+        ///[Fact] 
+        ///public void CreateProduct1() {
 
             // all arguments missing
 
-            Product  product1 = new Product("", null, "", "", null);
-        }
+            ///Product  product1 = new Product("", null, "", "", null);
+        ///}
 
-        [Fact]
-        public void InvalidQuantities() {
+        /// <summary>
+        /// [Fact]
+        /// </summary>
+        /// public void InvalidQuantities() {
 
             // first should have negative quantity, second should have non-integer quantity
 
-            Product product1 = new Product("")
-        }
+            ///Product product1 = new Product("")
+        ///}
     }
 }

@@ -1,4 +1,7 @@
 ﻿using Xunit;
+using System;
+using System.Linq;
+using Microsoft.Extensions.DependencyModel.Resolution;
 using P3AddNewFunctionalityDotNetCore.Models;
 using P3AddNewFunctionalityDotNetCore.Models.Repositories;
 using P3AddNewFunctionalityDotNetCore.Models.Services;
@@ -33,8 +36,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             int id = 5;
 
             Product product = productService.GetProductById(id);
-            Assert.IsSame("NOKIA OEM BL-5J", product.Name);
-            Assert.IsEqual(895.00, product.Price);
+            Assert.Same("NOKIA OEM BL-5J", product.Name);
+            Assert.Equal(895.00, product.Price);
         }
 
         /// Integration Test
@@ -50,29 +53,29 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             cart.AddItem(products.where(p => p.id == 5).First(), 1);
             cart.AddItem(products.where(p => p.id == 4).First(), 3);
 
-            productService.UpdateProductQuantities(cart);
+            productService.UpdateProductQuantities();
 
-            Assert.IsEqual(8, products.where(p => p.id == 1).First().Stock);
-            Assert.IsEqual(49, products.where(p => p.id == 5).First().Stock);
-            Assert.IsEqual(37, products.where(p => p.id == 4).First().Stock);
+            Assert.Equal(8, products.Where(p => p.id == 1).First().Stock);
+            Assert.Equal(49, products.Where(p => p.id == 5).First().Stock);
+            Assert.Equal(37, products.Where(p => p.id == 4).First().Stock);
 
             ///test that static cart retains the updates.
     
-            Cart cart = new Cart();
+            cart = new Cart();
             productRepository = new ProductRepository();
             orderRepository = new OrderRepository();
             productService = new ProductService(productRepository, orderRepository);
             
             products = productService.GetAllProducts();
-            cart.AddItem(products.where(p => p.id == 1).First(), 1);
-            cart.AddItem(products.where(p => p.id == 5).First(), 2);
-            cart.AddItem(products.where(p => p.id == 4).First(), 1);
+            cart.AddItem(products.Where(p => p.id == 1).First(), 1);
+            cart.AddItem(products.Where(p => p.id == 5).First(), 2);
+            cart.AddItem(products.Where(p => p.id == 4).First(), 1);
 
             productService.UpdateProductQuantities(cart);
 
-            Assert.IsEqual(7, products.where(p => p.id == 1).First().Stock);
-            Assert.IsEqual(47, products.where(p => p.id == 5).First().Stock);
-            Assert.IsEqual(36, products.where(p => p.id == 4).First().Stock);
+            Assert.Equal(7, products.Where(p => p.id == 1).First().Stock);
+            Assert.Equal(47, products.Where(p => p.id == 5).First().Stock);
+            Assert.Equal(36, products.Where(p => p.id == 4).First().Stock);
         }
     }
 }

@@ -1,8 +1,10 @@
-using XUnit;
+using Xunit;
 using System.Collections.Generic;
 using P3AddNewFunctionalityDotNetCore.Models;
 using P3AddNewFunctionalityDotNetCore.Models.Repositories;
 using P3AddNewFunctionalityDotNetCore.Models.Services;
+using P3AddNewFunctionalityDotNetCore.Models.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using System;
 using System.Linq;
@@ -13,9 +15,14 @@ namespace P3AddNewFunctionalityDotNetCore.Tests {
 
         [Fact]
         public void AddItemToCart(){
-            Cart cart = new Cart();
-            Product product1 = new Product(1, 0, 20, "name", "description");
-            Product product2 = new Product(1, 0, 20, "name", "description");
+            using (var context = new P3Referential(
+                serviceProvider.GetRequiredService<Microsoft.EntityFrameworkCore.DbContextOptions<P3Referential>>()))
+            {
+                Cart cart = new Cart();
+
+                context.Product product1 = new context.Product{
+
+                }
 
             cart.AddItem(product1, 1);
             cart.AddItem(product2, 1);
@@ -23,12 +30,15 @@ namespace P3AddNewFunctionalityDotNetCore.Tests {
             Assert.NotEmpty(cart.Lines);
             Assert.Single(cart.Lines);
             Assert.Equal(2, cart.Lines.First().Quantity);
+            }
         }
 
-        [Fact]
-        public void GetAverageValue() {
-            Cart cart = new Cart();
-            
-        }
+        /// <summary>
+        /// [Fact]
+        /// </summary>
+        /// public void GetAverageValue() {
+            /// Cart cart = new Cart();
+
+        /// }
     }
 }
