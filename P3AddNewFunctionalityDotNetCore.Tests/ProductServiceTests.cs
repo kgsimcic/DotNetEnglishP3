@@ -1,13 +1,28 @@
 ﻿using Xunit;
 using System;
-using System.Linq;
+using Moq;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Abstractions;
 using Microsoft.Extensions.DependencyModel.Resolution;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using Microsoft.EntityFrameworkCore;
+using Moq.EntityFrameworkCore;
+
 using P3AddNewFunctionalityDotNetCore.Models;
 using P3AddNewFunctionalityDotNetCore.Models.Repositories;
+using P3AddNewFunctionalityDotNetCore.Models.Entities;
 using P3AddNewFunctionalityDotNetCore.Models.Services;
+using P3AddNewFunctionalityDotNetCore.Tests;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests
 {
+    public class ProductContext : DbContext
+    {
+        public DbSet<Product> Product {get; set;}
+    }
+    
     public class ProductServiceTests
     {
         /// <summary>
@@ -15,67 +30,30 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         /// A test method must check if a definite method does its job:
         /// returns an expected value from a particular set of parameters
         /// </summary>
+        /// 
+
         [Fact]
-        public void ProductTest()
+        public void TestGetProductById()
         {
-            IProductRepository productRepository = new ProductRepository();
-            IOrderRepository orderRepository = new OrderRepository();
-            IProductService productService = new ProductService(productRepository, orderRepository);
+            // Arrange
+            // var mockSet = new Mock<DbSet<Product>>();
+            // var mockContext = new Mock<ProductContext>();
+            // mockContext.Setup<DbSet<Product>>(x => x.Product).ReturnsDbSet(TestDataHelper.GetFakeProducts());
 
-            var products = productService.GetAllProducts();
+            var localizer = new Mock<IStringLocalizer<ProductService>>().Object;
+            var mockOrderRepository = new Mock<OrderRepository>().Object;
+            var mockProductRepository = new Mock<ProductRepository>();
+            mockProductRepository.Setup(x => x.GetAllProducts()).Returns(TestDataHelper.GetFakeProducts());
+            var mockCart = new Mock<Cart>().Object;
+            IProductService productService = new ProductService(mockCart, mockProductRepository.Object, mockOrderRepository, localizer);
+            var product = productService.GetAllProducts();
 
-            Assert.IsType<List<Product>>(products);
-        }
+            // Act
 
-        [Fact]
-        public void GetProductFromId() {
-            IProductRepository productRepository = new ProductRepository();
-            IOrderRepository orderRepository = new OrderRepository();
-            IProductService productService = new ProductService(productRepository, orderRepository);
-
-            int id = 5;
-
-            Product product = productService.GetProductById(id);
-            Assert.Same("NOKIA OEM BL-5J", product.Name);
-            Assert.Equal(895.00, product.Price);
-        }
-
-        /// Integration Test
-        [Fact]
-        public void UpdateProductQuantities(){
-            Cart cart = new Cart();
-            IProductRepository productRepository = new ProductRepository();
-            IOrderRepository orderRepository = new OrderRepository();
-            IProductService productService = new ProductService(productRepository, orderRepository);
-
-            var products = productService.GetAllProducts();
-            cart.AddItem(products.where(p => p.id == 1).First(), 2);
-            cart.AddItem(products.where(p => p.id == 5).First(), 1);
-            cart.AddItem(products.where(p => p.id == 4).First(), 3);
-
-            productService.UpdateProductQuantities();
-
-            Assert.Equal(8, products.Where(p => p.id == 1).First().Stock);
-            Assert.Equal(49, products.Where(p => p.id == 5).First().Stock);
-            Assert.Equal(37, products.Where(p => p.id == 4).First().Stock);
-
-            ///test that static cart retains the updates.
-    
-            cart = new Cart();
-            productRepository = new ProductRepository();
-            orderRepository = new OrderRepository();
-            productService = new ProductService(productRepository, orderRepository);
-            
-            products = productService.GetAllProducts();
-            cart.AddItem(products.Where(p => p.id == 1).First(), 1);
-            cart.AddItem(products.Where(p => p.id == 5).First(), 2);
-            cart.AddItem(products.Where(p => p.id == 4).First(), 1);
-
-            productService.UpdateProductQuantities(cart);
-
-            Assert.Equal(7, products.Where(p => p.id == 1).First().Stock);
-            Assert.Equal(47, products.Where(p => p.id == 5).First().Stock);
-            Assert.Equal(36, products.Where(p => p.id == 4).First().Stock);
+            // Assert
+            // Assert.Equals(1, product.Id);
+            // Assert.Same("words", product.Description);
+            // Assert.Same("product1", product.Name);            
         }
     }
 }

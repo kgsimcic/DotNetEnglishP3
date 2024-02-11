@@ -9,9 +9,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests{
         public void ChangeCulture(){
             ILanguageService languageService = new LanguageService();
             string language = "Spanish";
-
             string culture = languageService.SetCulture(language);
-
             Assert.Same("es", culture);
         }
     }
