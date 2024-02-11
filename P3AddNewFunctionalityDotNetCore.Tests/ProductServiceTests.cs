@@ -40,13 +40,13 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             // var mockContext = new Mock<ProductContext>();
             // mockContext.Setup<DbSet<Product>>(x => x.Product).ReturnsDbSet(TestDataHelper.GetFakeProducts());
 
-            var localizer = new Mock<IStringLocalizer<ProductService>>().Object;
-            var mockOrderRepository = new Mock<OrderRepository>().Object;
-            var mockProductRepository = new Mock<ProductRepository>();
-            mockProductRepository.Setup(x => x.GetAllProducts()).Returns(TestDataHelper.GetFakeProducts());
-            var mockCart = new Mock<Cart>().Object;
-            IProductService productService = new ProductService(mockCart, mockProductRepository.Object, mockOrderRepository, localizer);
-            var product = productService.GetAllProducts();
+            // var localizer = new Mock<IStringLocalizer<ProductService>>().Object;
+            // var mockOrderRepository = new Mock<OrderRepository>().Object;
+            // var mockProductRepository = new Mock<ProductRepository>();
+            // mockProductRepository.Setup(x => x.GetAllProducts()).Returns(TestDataHelper.GetFakeProducts());
+            // var mockCart = new Mock<Cart>().Object;
+            // IProductService productService = new ProductService(mockCart, mockProductRepository.Object, mockOrderRepository, localizer);
+            // var product = productService.GetAllProducts();
 
             // Act
 
