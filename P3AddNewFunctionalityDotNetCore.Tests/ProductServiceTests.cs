@@ -92,15 +92,18 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             var localizer = new Mock<IStringLocalizer<ProductService>>().Object;
             var mockOrderRepository = new Mock<IOrderRepository>();
             var cart = new Cart();
-            // IEnumerable<CartLine> fakeCartLines = TestDataHelper.GetFakeCartLines();
-            // mockCart.Setup(x => x.Lines).Returns(fakeCartLines);
 
             // set up mock product repository
             var mockProductRepository = new Mock<IProductRepository>();
             List<Product> fakeProducts = TestDataHelper.GetFakeProducts();
             IEnumerable<Product> fakeProductEntities = fakeProducts.Where(p => p.Id > 0);
+
+            mockProductRepository.Setup(x => x.UpdateProductStocks(It.IsAny<int>(), It.IsAny<int>())).Callback((int id, int quantityToRemove) =>
+                                {
+                                    fakeProducts = fakeProducts.Where(p => p.Id != id).ToList();
+                                    fakeProductEntities = fakeProducts.Where(p => p.Id > 0);
+                                });
             mockProductRepository.Setup(x => x.GetAllProducts()).Returns(fakeProductEntities);
-            // mockProductRepository.Setup(x => x.UpdateProductStocks(2, 1)).Returns(fakeProducts.FirstOrDefault())
 
             // set up non empty cart
             cart.AddItem(fakeProducts.FirstOrDefault(), 1);
@@ -115,8 +118,9 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             Assert.NotEmpty(productsBefore);
             Assert.Equal(2, productsBefore.Count);  
 
-            // Act again
+            // Act again, update repository behavior
             productService.UpdateProductQuantities();
+            mockProductRepository.Setup(x => x.GetAllProducts()).Returns(fakeProductEntities);
             var productsAfter = productService.GetAllProducts();
 
             // Assert final
