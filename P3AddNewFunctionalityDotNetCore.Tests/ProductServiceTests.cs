@@ -20,10 +20,6 @@ using P3AddNewFunctionalityDotNetCore.Tests;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests
 {
-    public class ProductContext : DbContext
-    {
-        public DbSet<Product> Product {get; set;}
-    }
     
     public class ProductServiceTests
     {
