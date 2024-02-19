@@ -5,6 +5,8 @@ namespace P3AddNewFunctionalityDotNetCore.Data
 {
     public class P3Referential : DbContext
     {
+        public P3Referential(){
+        }
         public P3Referential(DbContextOptions<P3Referential> options)
             : base(options)
         {
