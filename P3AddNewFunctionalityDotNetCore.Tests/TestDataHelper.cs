@@ -29,6 +29,28 @@ namespace P3AddNewFunctionalityDotNetCore.Tests {
             };
         }
 
+        
+        public static List<Product> GetFakeProductsInsert()
+        {
+            return new List<Product>()
+            {
+                new Product {
+                    Id = 1,
+                    Description = "words",
+                    Name = "product1",
+                    Quantity = 1,
+                    Price = 15.00
+                },
+                new Product {
+                    Id = 2,
+                    Description = "more words",
+                    Name = "product2",
+                    Quantity = 1,
+                    Price = 45
+                }
+            };
+        }
+
         public static List<CartLine> GetFakeCartLines()
         {
             return new List<CartLine>()
