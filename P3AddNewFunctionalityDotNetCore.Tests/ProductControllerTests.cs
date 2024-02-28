@@ -28,32 +28,37 @@ namespace P3AddNewFunctionalityDotNetCore.Tests {
             var languageService = new Mock<LanguageService>().Object;
 
             // Arrange more: Mock DbContext
-            var productData = TestDataHelper.GetFakeProducts().AsQueryable();
+            var productData = TestDataHelper.GetFakeProducts();
             var mockSet = new Mock<DbSet<Product>>();
-            mockSet.As<IQueryable<Product>>().Setup(m => m.Provider).Returns(productData.Provider);
-            mockSet.As<IQueryable<Product>>().Setup(m => m.Expression).Returns(productData.Expression);
-            mockSet.As<IQueryable<Product>>().Setup(m => m.ElementType).Returns(productData.ElementType);
-            mockSet.As<IQueryable<Product>>().Setup(m => m.GetEnumerator()).Returns(() => productData.GetEnumerator());
+            mockSet.As<IQueryable<Product>>().Setup(m => m.Provider).Returns(productData.AsQueryable().Provider);
+            mockSet.As<IQueryable<Product>>().Setup(m => m.Expression).Returns(productData.AsQueryable().Expression);
+            mockSet.As<IQueryable<Product>>().Setup(m => m.ElementType).Returns(productData.AsQueryable().ElementType);
+            mockSet.As<IQueryable<Product>>().Setup(m => m.GetEnumerator()).Returns(() => productData.AsQueryable().GetEnumerator());
 
-            // set up behavior of mock dbcontext
+            // set up get and delete behavior of mock dbcontext
             var mockContext = new Mock<P3Referential>();
             mockContext.Setup(x => x.Product).Returns(mockSet.Object);
+            mockContext.Setup(m => m.Product.Remove(It.IsAny<Product>())).Callback<Product>((entity) => productData.Remove(entity));
+
+            int idToDelete = 1;
+            mockContext.Setup(m => m.Product.Find(idToDelete)).Returns(productData.Single(p => p.Id == idToDelete));
+
 
             // Arrange: real components
             ProductRepository productRepository = new ProductRepository(mockContext.Object);
-            IProductService productService = new ProductService(mockCart, productRepository, mockOrderRepository.Object, localizer);
+            ProductService productService = new ProductService(mockCart, productRepository, mockOrderRepository.Object, localizer);
             ProductController productController = new ProductController(productService, languageService);
 
             // Act
             var deleteResult = productController.DeleteProduct(1) as ViewResult;
-            // var viewResult = productController.Index() as ViewResult;
-
+            var viewResult = productController.Admin() as ViewResult;
+            var modelResult = viewResult.Model as IEnumerable<ProductViewModel>;
+            
             // Assert
-            Assert.NotNull(deleteResult.Model);
-            Assert.IsType<List<ProductViewModel>>(deleteResult.Model);
-            Assert.Single(deleteResult.Model as IEnumerable<ProductViewModel>);
-
-
+            Assert.NotNull(viewResult.Model);
+            Assert.Single(modelResult);
+            Assert.Equal(2, modelResult.FirstOrDefault().Id);
         }
+    
     }
 }

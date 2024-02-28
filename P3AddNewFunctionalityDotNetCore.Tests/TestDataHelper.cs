@@ -5,12 +5,6 @@ using System.Threading.Tasks;
 using P3AddNewFunctionalityDotNetCore.Models;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests {
-    // public class CartLine
-    // {
-    //     public int OrderLineId { get; set; }
-    //     public Product Product { get; set; }
-    //     public int Quantity { get; set; }
-    // }
 
     public class TestDataHelper {
         // method for mock to return fake products

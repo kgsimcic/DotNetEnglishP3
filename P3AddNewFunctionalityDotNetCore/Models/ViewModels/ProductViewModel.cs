@@ -18,9 +18,14 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
 
         public string Details { get; set; }
 
+        [Required(ErrorMessage = "MissingQuantity")]
+        [QuantityTypeInt(ErrorMessage = "QuantityNotAnInteger")]
+        [QuantityRange(0, ErrorMessage = "QuantityNotGreaterThanZero")]
         public string Stock { get; set; }
 
         [Required(ErrorMessage = "MissingPrice")]
+        [PriceTypeNum(ErrorMessage = "PriceNotANumber")]
+        [PriceRange(0, ErrorMessage = "PriceNotGreaterThanZero")]
         public string Price { get; set; }
     }
 }
