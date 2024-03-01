@@ -50,7 +50,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests {
             ProductController productController = new ProductController(productService, languageService);
 
             // Act
-            var deleteResult = productController.DeleteProduct(1) as ViewResult;
+            productController.DeleteProduct(1);
             var viewResult = productController.Admin() as ViewResult;
             var modelResult = viewResult.Model as IEnumerable<ProductViewModel>;
             
